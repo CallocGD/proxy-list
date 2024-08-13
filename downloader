@@ -29,7 +29,9 @@ def download(type:str, lists:list[str]):
         if response.status_code == 200:
             for proxy in response.text.strip().split('\n'):
                 if matching := (IPV4.search(proxy) or IPV6.search(proxy)):
-                    proxies.add(matching.group(0))
+                    # Remove 0s from IPS such as 050.125.125.125 it's annyoing and I don't like it - Calloc
+                    proxies.add(matching.group(0).lstrip("0"))
+
 
     output = os.path.join('proxies', f"{type}.txt")
     with open(output, 'w', encoding='utf-8') as f:
